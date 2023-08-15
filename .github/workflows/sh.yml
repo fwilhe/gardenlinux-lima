@@ -1,0 +1,23 @@
+name: CI
+on:
+  workflow_dispatch:
+  push:
+    branches: [ "main" ]
+  pull_request:
+    branches: [ "main" ]
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@v3
+    - name: Run a multi-line script
+      run: |
+        wget --output-document gl.zip https://github.com/gardenlinux/gardenlinux/archive/refs/heads/main.zip
+        unzip gl.zip
+        cd gardenlinux-main
+        ./build kvm-lima
+
+    - uses: actions/upload-artifact@v3
+      with:
+        name: gardenlinux-lima
+        path: gardenlinux-main/.build/kvm*-today-*raw
